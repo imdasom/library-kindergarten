@@ -11,8 +11,8 @@ export default function UseOrReturnPage() {
   const [user, setUser] = useState<User>();
 
   const handleKeyPress = useCallback(
-    async (e) => {
-      if (e.keyCode === 32) {
+    async (e: KeyboardEvent) => {
+      if (e.keyCode === 13) {
         if (step === 1) {
           await handleBookBarcode(keybuffer);
         } else if (step === 2) {
