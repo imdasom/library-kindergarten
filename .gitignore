@@ -14,6 +14,7 @@
 
 # production
 /build
+/storybook-static
 
 # misc
 .DS_Store
@@ -25,11 +26,29 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.crowdin-key
+.env.preview.local
+.env.**
+cypress.env.json
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# webstorm
+.idea/**/*
+
+# Sentry
+.sentryclirc
+
+# https certification
+localhost.crt
+localhost.key
+
+# temp
+/temp
+
+tsconfig.tsbuildinfo
