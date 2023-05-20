@@ -59,7 +59,7 @@ export default function UserModal({ user: _user, onClose, onSubmit }: Props) {
           <input
             type={'radio'}
             name={'role'}
-            id={'roleAdmin'}
+            id={'roleUser'}
             value={'USER'}
             checked={user?.role === 'USER'}
             onChange={handleChange}
@@ -68,7 +68,7 @@ export default function UserModal({ user: _user, onClose, onSubmit }: Props) {
           <input
             type={'radio'}
             name={'role'}
-            id={'roleUser'}
+            id={'roleAdmin'}
             value={'ADMIN'}
             checked={user?.role === 'ADMIN'}
             onChange={handleChange}
