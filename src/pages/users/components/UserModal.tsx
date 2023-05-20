@@ -6,12 +6,18 @@ import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 
 type Props = {
+  actionType: 'NEW' | 'EDIT';
   user?: User;
   onClose: () => void;
   onSubmit: (user: User) => void;
 };
 
-export default function UserModal({ user: _user, onClose, onSubmit }: Props) {
+export default function UserModal({
+  actionType,
+  user: _user,
+  onClose,
+  onSubmit,
+}: Props) {
   const [user, setUser] = useState<User>(() => {
     if (_user) return _user;
     return DEFAULT_USER;
@@ -29,7 +35,10 @@ export default function UserModal({ user: _user, onClose, onSubmit }: Props) {
   };
 
   return (
-    <Modal title={'회원 추가/수정'} onClose={onClose}>
+    <Modal
+      title={actionType === 'EDIT' ? '회원 수정' : '회원 추가'}
+      onClose={onClose}
+    >
       <div className={styles.formContainer}>
         {user?.barcode && (
           <div className={styles.formItem}>
@@ -90,7 +99,9 @@ export default function UserModal({ user: _user, onClose, onSubmit }: Props) {
           />
         </div>
         <div />
-        <Button onClick={handleSubmit}>수정</Button>
+        <Button onClick={handleSubmit}>
+          {actionType === 'EDIT' ? '수정' : '추가'}
+        </Button>
       </div>
     </Modal>
   );

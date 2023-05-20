@@ -92,6 +92,7 @@ export default function UserListPage() {
       </div>
       {createModal.open && (
         <UserModal
+          actionType={'NEW'}
           onClose={() => {
             createModal.onClose();
             setModalUser(undefined);
@@ -102,6 +103,7 @@ export default function UserListPage() {
       )}
       {updateModal.open && (
         <UserModal
+          actionType={'EDIT'}
           onClose={() => {
             updateModal.onClose();
             setModalUser(undefined);
