@@ -1,0 +1,27 @@
+.formContainer {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.formItem {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  grid-template-columns: 100px auto;
+
+  label {
+    align-self: center;
+  }
+
+  input {
+    padding: 5px 10px;
+    border: 1px solid #d3d3d3;
+  }
+
+  input:disabled {
+    backdrop: #d2d2d2;
+    color: #989898;
+  }
+}

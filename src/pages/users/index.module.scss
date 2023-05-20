@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-ttems: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-ttems: center;
+  width: 100%;
+  margin-bottom: 50px;
+
+  .itemContainer {
+    border-top: 1px solid #e6e6e6;
+  }
+
+  .itemContainer:first-child {
+    border-top: 2px solid #e6e6e6;
+    color: #b6b6b6;
+    font-weight: bold;
+  }
+
+  .itemContainer:last-child {
+    border-bottom: 1px solid #e6e6e6;
+  }
+}
+
+.itemContainer {
+  display: grid;
+  grid-auto-flow: column;
+  width: 100%;
+  grid-template-columns: 100px 150px auto 100px 150px 150px;
+  cursor: pointer;
+
+  div {
+    padding: 20px 20px;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
