@@ -6,42 +6,62 @@ type BookResponse = {
   id: number;
   barcode: string;
   title: string;
-  author: string;
-  in_use: boolean;
-  created_at: Date;
-  updated_at: Date;
+  writer: string;
+  painter: string;
+  category: string;
+  inUse: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Book = {
   id: number;
   barcode: string;
   title: string;
-  author: string;
+  writer: string;
+  painter: string;
+  category: string;
   inUse: boolean;
   createdAt: dayjs.Dayjs;
   updatedAt: dayjs.Dayjs;
 };
 
+export const DEFAULT_BOOK: Book = {
+  id: 0,
+  barcode: '',
+  title: '',
+  writer: '',
+  painter: '',
+  category: '',
+  inUse: true,
+  createdAt: dayjs(),
+  updatedAt: dayjs(),
+};
+
 const SCHEMA_NAME = 'BOOK';
 
-export const getBooks = async () => {
+type GetBooksParam = { category?: string };
+
+export const getBooks = async ({ category }: GetBooksParam) => {
   const mapResponse = (list: BookResponse[]): Book[] => {
     return list.map((item) => {
       return {
-        id: Number(item['id']),
-        barcode: item['barcode'],
-        title: item['title'],
-        author: item['author'],
-        inUse: item['in_use'],
-        createdAt: item['created_at'] ? dayjs(item['created_at']) : dayjs(),
-        updatedAt: item['updated_at'] ? dayjs(item['updated_at']) : dayjs(),
+        ...item,
+        createdAt: item['createdAt'] ? dayjs(item['createdAt']) : dayjs(),
+        updatedAt: item['updatedAt'] ? dayjs(item['updatedAt']) : dayjs(),
       };
     });
   };
-  const { data } = await supabase
-    .from(SCHEMA_NAME)
-    .select()
+
+  let query = supabase.from(SCHEMA_NAME).select();
+  if (!!category) {
+    query = query.eq('category', category);
+  }
+
+  const { data } = await query
+    .order('id', { ascending: false })
     .returns<BookResponse[]>();
+
   if (!data) {
     return [];
   }
@@ -63,40 +83,52 @@ export const getBookByBarcode = async (
   }
 
   return {
-    id: item.id,
-    barcode: item.barcode,
-    title: item.title,
-    author: item.author,
-    inUse: item.in_use,
-    createdAt: item.created_at ? dayjs(item.created_at) : dayjs(),
-    updatedAt: item.updated_at ? dayjs(item.updated_at) : dayjs(),
+    ...item,
+    createdAt: item.createdAt ? dayjs(item.createdAt) : dayjs(),
+    updatedAt: item.updatedAt ? dayjs(item.updatedAt) : dayjs(),
   };
 };
 
 export async function createBook(book: Book) {
+  const { id, ...bookNoId } = book;
   const newBook = {
-    barcode: book.barcode,
-    title: book.title,
-    author: book.author,
-    inUse: book.inUse,
-    created_at: book.createdAt.toDate(),
-    updated_at: book.updatedAt.toDate(),
+    ...bookNoId,
+    createdAt: book.createdAt.toDate(),
+    updatedAt: book.updatedAt.toDate(),
   };
-  await supabase.from(SCHEMA_NAME).insert(newBook);
+  try {
+    await supabase.from(SCHEMA_NAME).insert(newBook).throwOnError();
+  } catch (error) {
+    //@ts-ignore
+    if (error.code === '23505') {
+      throw Error('중복된 바코드입니다');
+    }
+    throw error;
+  }
 }
 
 export async function updateBook(book: Book) {
   const updateBook = {
-    id: book.id,
-    barcode: book.barcode,
-    title: book.title,
-    author: book.author,
-    inUse: book.inUse,
-    created_at: book.createdAt.toDate(),
-    updated_at: book.updatedAt.toDate(),
+    ...book,
+    updatedAt: book.updatedAt.toDate(),
   };
   const { error } = await supabase
     .from(SCHEMA_NAME)
     .update(updateBook)
     .eq('id', book.id);
+}
+
+export async function updateInUseBook(id: number, inUse: boolean) {
+  const updateBook = {
+    inUse,
+    updatedAt: dayjs().toDate(),
+  };
+  const { error } = await supabase
+    .from(SCHEMA_NAME)
+    .update(updateBook)
+    .eq('id', id);
+}
+
+export async function deleteBook(book: Book) {
+  const { error } = await supabase.from(SCHEMA_NAME).delete().eq('id', book.id);
 }

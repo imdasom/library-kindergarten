@@ -17,7 +17,7 @@ export default function Modal({ title, onClose, children }: Props) {
             {title && <div className={styles.title}>{title}</div>}
             <Close onClick={onClose} />
           </div>
-          <div>{children}</div>
+          <div className={styles.children}>{children}</div>
         </div>
       </div>
     </div>

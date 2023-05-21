@@ -7,6 +7,27 @@
   gap: 10px;
 }
 
+.leftActionItems {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 0.7em;
+  align-self: flex-end;
+
+  div {
+    background: #afafaf;
+    color: white;
+    padding: 3px 6px;
+    cursor: pointer;
+  }
+}
+
 .listContainer {
   display: flex;
   flex-direction: column;
@@ -34,8 +55,7 @@
   display: grid;
   grid-auto-flow: column;
   width: 100%;
-  grid-template-columns: 100px 150px auto 100px 150px 150px 80px;
-  cursor: pointer;
+  grid-template-columns: 70px 100px 130px auto 100px 80px;
   cursor: pointer;
   font-size: 0.6em;
   align-items: center;
@@ -53,4 +73,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+.writerPainter {
+  color: #a1a1a1;
 }

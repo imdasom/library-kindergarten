@@ -84,22 +84,26 @@ export default function UserModal({
           />
           <label htmlFor={'roleAdmin'}>관리자</label>
         </div>
-        <div className={styles.formItem}>
-          <label>등록일</label>
-          <input
-            value={user?.createdAt?.format('YYYY-MM-DD HH:mm:ss')}
-            disabled
-          />
-        </div>
-        <div className={styles.formItem}>
-          <label>수정일</label>
-          <input
-            value={user?.updatedAt?.format('YYYY-MM-DD HH:mm:ss')}
-            disabled
-          />
-        </div>
+        {actionType === 'EDIT' && (
+          <>
+            <div className={styles.formItem}>
+              <label>등록일</label>
+              <input
+                value={user?.createdAt?.format('YYYY-MM-DD HH:mm:ss')}
+                disabled
+              />
+            </div>
+            <div className={styles.formItem}>
+              <label>수정일</label>
+              <input
+                value={user?.updatedAt?.format('YYYY-MM-DD HH:mm:ss')}
+                disabled
+              />
+            </div>
+          </>
+        )}
         <div />
-        <Button onClick={handleSubmit}>
+        <Button onClick={handleSubmit} className={styles.submitButton}>
           {actionType === 'EDIT' ? '수정' : '추가'}
         </Button>
       </div>

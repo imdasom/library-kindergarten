@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { createUser, getUsers, updateUser, User } from '@/services/UserService';
+import {
+  createUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  User,
+} from '@/services/UserService';
 import AdminPageLayout from '@/components/AdminPageLayout/AdminPageLayout';
 import styles from './index.module.scss';
 import UserModal from '@/pages/users/components/UserModal';
@@ -54,6 +60,17 @@ export default function UserListPage() {
       });
   };
 
+  const handleDelete = (user: User) => {
+    deleteUser(user)
+      .then(() => {
+        alert('삭제되었습니다');
+        return handleGetUserList();
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
   return (
     <AdminPageLayout>
       <div className={styles.container}>
@@ -71,6 +88,7 @@ export default function UserListPage() {
             <div>권한</div>
             <div>등록일</div>
             <div>수정일</div>
+            <div></div>
           </div>
           {userList?.map((user, i) => {
             return (
@@ -85,6 +103,18 @@ export default function UserListPage() {
                 <div>{user.role === 'ADMIN' ? '관리자' : '일반'}</div>
                 <div>{user.createdAt.format('YYYY-MM-DD')}</div>
                 <div>{user.updatedAt.format('YYYY-MM-DD')}</div>
+                <div>
+                  <Button
+                    buttonStyle={'danger'}
+                    buttonSize={'S'}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleDelete(user);
+                    }}
+                  >
+                    삭제
+                  </Button>
+                </div>
               </div>
             );
           })}

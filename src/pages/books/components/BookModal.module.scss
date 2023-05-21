@@ -1,5 +1,5 @@
 .formContainer {
-  width: 300px;
+  width: 500px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -24,6 +24,18 @@
     backdrop: #d2d2d2;
     color: #989898;
   }
+}
+
+.radioGroupWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radioWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .submitButton {

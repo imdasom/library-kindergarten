@@ -1,16 +1,23 @@
 .button {
-
-}
-
-.primary {
   padding: 10px 20px;
   border: none;
   color: white;
   font-weight: bold;
-  //border-radius: 10px;
+}
+
+.primary {
   background-image: linear-gradient(102deg, #0fd064 0%, #03c75a 33%);
 }
 
 .secondary {
 
+}
+
+.danger {
+  background-image: linear-gradient(102deg, #ea1212 0%, #e81f1f 33%);
+}
+
+.S {
+  font-size: 0.6em;
+  padding: 5px 10px;
 }

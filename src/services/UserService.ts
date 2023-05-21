@@ -1,7 +1,6 @@
 //@ts-ignore
 import { supabase } from '../repositories';
 import dayjs from 'dayjs';
-import { PostgrestError } from '@supabase/postgrest-js/src/types';
 
 type UserResponse = {
   id: number;
@@ -137,4 +136,8 @@ export async function updateUser(user: User) {
     .from(SCHEMA_NAME)
     .update(updateUser)
     .eq('id', user.id);
+}
+
+export async function deleteUser(user: User) {
+  const { error } = await supabase.from(SCHEMA_NAME).delete().eq('id', user.id);
 }
