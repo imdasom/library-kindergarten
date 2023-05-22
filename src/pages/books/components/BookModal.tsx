@@ -4,6 +4,7 @@ import { ChangeEvent, useState } from 'react';
 import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 import { Book, DEFAULT_BOOK } from '@/services/BookService';
+import html2canvas from 'html2canvas';
 
 type Props = {
   actionType: 'NEW' | 'EDIT';
@@ -39,6 +40,25 @@ export default function BookModal({
     setBook({ ...book, [name]: value });
   };
 
+  const handleClickBarcode = async (barcode) => {
+    const svgElement = document.getElementById(`barcode-image-${barcode}`);
+    const $captureBlock = svgElement;
+
+    if (!$captureBlock) return;
+
+    const canvas = await html2canvas($captureBlock, {
+      scale: 4,
+    });
+    const barcodeImageBase64 = canvas.toDataURL('image/jpeg');
+    const link = document.createElement('a');
+    link.href = barcodeImageBase64;
+    link.download = `book-barcode-${barcode}.jpeg`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Modal
       title={actionType === 'EDIT' ? '책 수정' : '책 추가'}
@@ -47,7 +67,14 @@ export default function BookModal({
       <div className={styles.formContainer}>
         {book?.barcode && (
           <div className={styles.formItem}>
-            <div>
+            <div
+              id={`barcode-image-${book.barcode}`}
+              className={styles.barcodeImageCaptureBlock}
+              onClick={async (event) => {
+                event.stopPropagation();
+                await handleClickBarcode(book.barcode);
+              }}
+            >
               <Barcode value={book.barcode} />
             </div>
           </div>

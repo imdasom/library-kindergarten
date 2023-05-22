@@ -16,6 +16,7 @@
     "dayjs": "^1.11.7",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
+    "html2canvas": "^1.4.1",
     "next": "13.4.2",
     "react": "18.2.0",
     "react-barcode": "^1.4.6",

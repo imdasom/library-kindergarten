@@ -55,12 +55,11 @@
   display: grid;
   grid-auto-flow: column;
   width: 100%;
-  grid-template-columns: 70px 100px 130px auto 100px 80px;
-  cursor: pointer;
+  grid-template-columns: 70px 150px 130px auto 100px 80px;
   font-size: 0.6em;
   align-items: center;
 
-  div {
+  & > div {
     padding: 20px 20px;
   }
 }
@@ -77,4 +76,17 @@
 
 .writerPainter {
   color: #a1a1a1;
+}
+
+.barcodeImageCaptureBlock {
+  width: fit-content;
+
+  svg {
+    width: 100px;
+    height: 50px;
+  }
+}
+
+.pointer {
+  cursor: pointer;
 }

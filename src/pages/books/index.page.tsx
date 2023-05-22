@@ -5,13 +5,14 @@ import {
   updateBook,
   Book,
   deleteBook,
-  getBooksByCategory,
 } from '@/services/BookService';
 import AdminPageLayout from '@/components/AdminPageLayout/AdminPageLayout';
 import styles from './index.module.scss';
 import BookModal from '@/pages/books/components/BookModal';
 import useModal from '@/components/Modal/useModal';
 import Button from '@/components/Button/Button';
+import Barcode from 'react-barcode';
+import html2canvas from 'html2canvas';
 
 export default function BookListPage() {
   const [bookList, setBookList] = useState<Book[]>();
@@ -83,6 +84,25 @@ export default function BookListPage() {
       });
   };
 
+  const handleClickBarcode = async (barcode) => {
+    const svgElement = document.getElementById(`barcode-image-${barcode}`);
+    const $captureBlock = svgElement;
+
+    if (!$captureBlock) return;
+
+    const canvas = await html2canvas($captureBlock, {
+      scale: 4,
+    });
+    const barcodeImageBase64 = canvas.toDataURL('image/jpeg');
+    const link = document.createElement('a');
+    link.href = barcodeImageBase64;
+    link.download = `book-barcode-${barcode}.jpeg`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <AdminPageLayout>
       <div className={styles.container}>
@@ -119,16 +139,30 @@ export default function BookListPage() {
           </div>
           {bookList?.map((book, i) => {
             return (
-              <div
-                key={i}
-                className={styles.itemContainer}
-                onClick={() => openUpdateModal(book)}
-              >
+              <div key={i} className={styles.itemContainer}>
                 <div>{book.id}</div>
-                <div>{book.barcode}</div>
+                <div
+                  className={styles.barcodeImageCaptureBlock}
+                  onClick={async (event) => {
+                    event.stopPropagation();
+                    await handleClickBarcode(book.barcode);
+                  }}
+                >
+                  <div
+                    id={`barcode-image-${book.barcode}`}
+                    className={styles.pointer}
+                  >
+                    <Barcode value={book.barcode} height={50} />
+                  </div>
+                </div>
                 <div>{book.category}</div>
-                <div>
-                  {book.title}
+                <div
+                  onClick={() => openUpdateModal(book)}
+                  className={styles.pointer}
+                >
+                  <span style={{ textDecoration: 'underline' }}>
+                    {book.title}
+                  </span>
                   <br />
                   <span
                     className={styles.writerPainter}

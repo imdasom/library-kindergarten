@@ -9,6 +9,7 @@ type BookResponse = {
   writer: string;
   painter: string;
   category: string;
+  userId?: number;
   inUse: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -21,6 +22,7 @@ export type Book = {
   writer: string;
   painter: string;
   category: string;
+  userId?: number;
   inUse: boolean;
   createdAt: dayjs.Dayjs;
   updatedAt: dayjs.Dayjs;
@@ -34,6 +36,7 @@ export const DEFAULT_BOOK: Book = {
   painter: '',
   category: '',
   inUse: true,
+  userId: 0,
   createdAt: dayjs(),
   updatedAt: dayjs(),
 };
@@ -90,7 +93,7 @@ export const getBookByBarcode = async (
 };
 
 export async function createBook(book: Book) {
-  const { id, ...bookNoId } = book;
+  const { id, userId, ...bookNoId } = book;
   const newBook = {
     ...bookNoId,
     createdAt: book.createdAt.toDate(),
@@ -118,9 +121,14 @@ export async function updateBook(book: Book) {
     .eq('id', book.id);
 }
 
-export async function updateInUseBook(id: number, inUse: boolean) {
+export async function updateInUseBook(
+  id: number,
+  inUse: boolean,
+  userId?: number
+) {
   const updateBook = {
     inUse,
+    userId: userId,
     updatedAt: dayjs().toDate(),
   };
   const { error } = await supabase

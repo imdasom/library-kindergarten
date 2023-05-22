@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Book, getBookByBarcode } from '../../services/BookService';
 import { getUserByBarcode, User } from '../../services/UserService';
 import Layout from '../../components/Layout';
+import { inUseBook } from '@/services/UserBookService';
 
 let keybuffer = '';
 
@@ -12,11 +13,14 @@ export default function UseOrReturnPage() {
 
   const handleKeyPress = useCallback(
     async (e: KeyboardEvent) => {
-      if (e.keyCode === 13) {
+      console.log(e.keyCode);
+      if (e.keyCode === 32) {
+        //13
         if (step === 1) {
           await handleBookBarcode(keybuffer);
         } else if (step === 2) {
           await handleUserBarcode(keybuffer);
+          handleSuccess();
         }
         keybuffer = '';
       } else {
@@ -25,6 +29,12 @@ export default function UseOrReturnPage() {
     },
     [step]
   );
+
+  const handleSuccess = () => {
+    inUseBook({ bookId: book?.id, inUse: true, userId: user?.id }).then(() =>
+      console.log('handleSuccess')
+    );
+  };
 
   useEffect(() => {
     document.addEventListener('keypress', handleKeyPress);
@@ -108,7 +118,7 @@ export default function UseOrReturnPage() {
               {!!book && (
                 <>
                   <div style={BarcodeText}>{book.barcode}</div>
-                  <div>{`${book.title} / ${book.author}`}</div>
+                  <div>{`${book.title} / ${book.writer}`}</div>
                 </>
               )}
             </div>
