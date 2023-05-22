@@ -31,7 +31,8 @@ export default function UseOrReturnPage() {
   );
 
   const handleSuccess = () => {
-    inUseBook({ bookId: book?.id, inUse: true, userId: user?.id }).then(() =>
+    if (!book || !user) return;
+    inUseBook({ bookId: book.id, inUse: true, userId: user.id }).then(() =>
       console.log('handleSuccess')
     );
   };

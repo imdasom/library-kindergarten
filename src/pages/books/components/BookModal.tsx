@@ -41,7 +41,7 @@ export default function BookModal({
     setBook({ ...book, [name]: value });
   };
 
-  const handleClickBarcode = async (barcode) => {
+  const handleClickBarcode = async (barcode: string) => {
     const $captureBlock = document.getElementById(`barcode-image-${barcode}`);
     await downloadSvgToJpeg($captureBlock, `book-barcode-${barcode}.jpeg`);
   };

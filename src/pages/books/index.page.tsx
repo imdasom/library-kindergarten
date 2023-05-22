@@ -85,7 +85,7 @@ export default function BookListPage() {
       });
   };
 
-  const handleClickBarcode = async (barcode) => {
+  const handleClickBarcode = async (barcode: string) => {
     const $captureBlock = document.getElementById(`barcode-image-${barcode}`);
     await downloadSvgToJpeg($captureBlock, `book-barcode-${barcode}.jpeg`);
   };
