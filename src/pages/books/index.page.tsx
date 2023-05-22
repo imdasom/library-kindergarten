@@ -13,6 +13,7 @@ import useModal from '@/components/Modal/useModal';
 import Button from '@/components/Button/Button';
 import Barcode from 'react-barcode';
 import html2canvas from 'html2canvas';
+import { downloadSvgToJpeg } from '../../helper';
 
 export default function BookListPage() {
   const [bookList, setBookList] = useState<Book[]>();
@@ -85,22 +86,8 @@ export default function BookListPage() {
   };
 
   const handleClickBarcode = async (barcode) => {
-    const svgElement = document.getElementById(`barcode-image-${barcode}`);
-    const $captureBlock = svgElement;
-
-    if (!$captureBlock) return;
-
-    const canvas = await html2canvas($captureBlock, {
-      scale: 4,
-    });
-    const barcodeImageBase64 = canvas.toDataURL('image/jpeg');
-    const link = document.createElement('a');
-    link.href = barcodeImageBase64;
-    link.download = `book-barcode-${barcode}.jpeg`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const $captureBlock = document.getElementById(`barcode-image-${barcode}`);
+    await downloadSvgToJpeg($captureBlock, `book-barcode-${barcode}.jpeg`);
   };
 
   return (
@@ -124,6 +111,9 @@ export default function BookListPage() {
               <div onClick={() => handleClickCategory('기타그림책')}>
                 기타그림책
               </div>
+            </div>
+            <div className={styles.listDescription}>
+              바코드 이미지를 클릭하면 다운로드 되어요
             </div>
           </div>
           <Button onClick={createModal.onOpen}>추가</Button>

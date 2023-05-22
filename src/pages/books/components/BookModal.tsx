@@ -5,6 +5,7 @@ import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 import { Book, DEFAULT_BOOK } from '@/services/BookService';
 import html2canvas from 'html2canvas';
+import { downloadSvgToJpeg } from '../../../helper';
 
 type Props = {
   actionType: 'NEW' | 'EDIT';
@@ -41,22 +42,8 @@ export default function BookModal({
   };
 
   const handleClickBarcode = async (barcode) => {
-    const svgElement = document.getElementById(`barcode-image-${barcode}`);
-    const $captureBlock = svgElement;
-
-    if (!$captureBlock) return;
-
-    const canvas = await html2canvas($captureBlock, {
-      scale: 4,
-    });
-    const barcodeImageBase64 = canvas.toDataURL('image/jpeg');
-    const link = document.createElement('a');
-    link.href = barcodeImageBase64;
-    link.download = `book-barcode-${barcode}.jpeg`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const $captureBlock = document.getElementById(`barcode-image-${barcode}`);
+    await downloadSvgToJpeg($captureBlock, `book-barcode-${barcode}.jpeg`);
   };
 
   return (
