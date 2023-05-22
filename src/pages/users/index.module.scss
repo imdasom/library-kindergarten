@@ -7,6 +7,12 @@
   gap: 10px;
 }
 
+.leftActionItems {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .listContainer {
   display: flex;
   flex-direction: column;
@@ -34,13 +40,11 @@
   display: grid;
   grid-auto-flow: column;
   width: 100%;
-  grid-template-columns: 100px 150px auto 100px 150px 150px 80px;
-  cursor: pointer;
-  cursor: pointer;
+  grid-template-columns: 70px 150px auto 100px 100px 100px 80px;
   font-size: 0.6em;
   align-items: center;
 
-  div {
+  & > div {
     padding: 20px 20px;
   }
 }
@@ -53,4 +57,23 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+.barcodeImageCaptureBlock {
+  width: fit-content;
+  cursor: pointer;
+
+  svg {
+    width: 100px;
+    height: 50px;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.listDescription {
+  font-size: 10px;
+  align-self: flex-end;
 }

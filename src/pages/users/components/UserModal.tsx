@@ -4,6 +4,7 @@ import Modal from '@/components/Modal/Modal';
 import { ChangeEvent, useState } from 'react';
 import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
+import { downloadSvgToJpeg } from '../../../helper';
 
 type Props = {
   actionType: 'NEW' | 'EDIT';
@@ -34,6 +35,11 @@ export default function UserModal({
     setUser({ ...user, [name]: value });
   };
 
+  const handleClickBarcode = async (barcode: string) => {
+    const $captureBlock = document.getElementById(`barcode-image-${barcode}`);
+    await downloadSvgToJpeg($captureBlock, `book-barcode-${barcode}.jpeg`);
+  };
+
   return (
     <Modal
       title={actionType === 'EDIT' ? '회원 수정' : '회원 추가'}
@@ -42,7 +48,14 @@ export default function UserModal({
       <div className={styles.formContainer}>
         {user?.barcode && (
           <div className={styles.formItem}>
-            <div>
+            <div
+              id={`barcode-image-${user.barcode}`}
+              className={styles.barcodeImageCaptureBlock}
+              onClick={async (event) => {
+                event.stopPropagation();
+                await handleClickBarcode(user.barcode);
+              }}
+            >
               <Barcode value={user.barcode} />
             </div>
           </div>

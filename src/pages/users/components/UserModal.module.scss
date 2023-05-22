@@ -30,3 +30,14 @@
   position: sticky;
   bottom: 0;
 }
+
+.barcodeImageCaptureBlock {
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+
+  svg {
+    width: 200px;
+    height: 100px;
+  }
+}
