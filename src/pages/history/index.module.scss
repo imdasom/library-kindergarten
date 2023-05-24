@@ -51,11 +51,23 @@
   }
 }
 
+.statusReturn {
+  width: fit-content;
+  background: #b4e796;
+  padding: 4px;
+}
+
+.statusInUse {
+  width: fit-content;
+  background: #f7f679;
+  padding: 4px;
+}
+
 .itemContainer {
   display: grid;
   grid-auto-flow: column;
   width: 100%;
-  grid-template-columns: 70px 150px 130px auto 80px 100px 80px;
+  grid-template-columns: 70px 100px 150px auto 100px 100px 100px;
   font-size: 0.6em;
   align-items: center;
 

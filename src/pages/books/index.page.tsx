@@ -124,6 +124,7 @@ export default function BookListPage() {
             <div>바코드</div>
             <div>분류</div>
             <div>책이름</div>
+            <div>대여상태</div>
             <div>수정일</div>
             <div></div>
           </div>
@@ -158,6 +159,7 @@ export default function BookListPage() {
                     className={styles.writerPainter}
                   >{`${book.writer} / ${book.painter}`}</span>
                 </div>
+                <div>{book.inUse ? '대여중' : ''}</div>
                 <div>{book.updatedAt.format('YYYY-MM-DD')}</div>
                 <div>
                   <Button

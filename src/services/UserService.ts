@@ -2,7 +2,7 @@
 import { supabase } from '../repositories';
 import dayjs from 'dayjs';
 
-type UserResponse = {
+export type UserResponse = {
   id: number;
   barcode: string;
   name: string;
@@ -31,19 +31,18 @@ export const DEFAULT_USER: User = {
 
 export const SCHEMA_NAME = 'USER';
 
-export const getUsers = async () => {
-  const mapResponse = (list: UserResponse[]): User[] => {
-    return list.map((item) => {
-      return {
-        id: Number(item['id']),
-        barcode: item['barcode'],
-        name: item['name'],
-        role: item['role'],
-        createdAt: item['created_at'] ? dayjs(item['created_at']) : dayjs(),
-        updatedAt: item['updated_at'] ? dayjs(item['updated_at']) : dayjs(),
-      };
-    });
+export const mapResponse = (item: UserResponse): User => {
+  return {
+    id: Number(item['id']),
+    barcode: item['barcode'],
+    name: item['name'],
+    role: item['role'],
+    createdAt: item['created_at'] ? dayjs(item['created_at']) : dayjs(),
+    updatedAt: item['updated_at'] ? dayjs(item['updated_at']) : dayjs(),
   };
+};
+
+export const getUsers = async () => {
   const { data } = await supabase
     .from(SCHEMA_NAME)
     .select()
@@ -54,7 +53,7 @@ export const getUsers = async () => {
     return [];
   }
 
-  return mapResponse(data);
+  return data.map(mapResponse);
 };
 
 export const getUserById = async (id: string): Promise<User | null> => {

@@ -1,10 +1,12 @@
 import { DEFAULT_USER, User } from '@/services/UserService';
 import styles from './UserModal.module.scss';
 import Modal from '@/components/Modal/Modal';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 import { downloadSvgToJpeg } from '../../../helper';
+import { Book, getBookByUserId } from '@/services/BookService';
+import dayjs from 'dayjs';
 
 type Props = {
   actionType: 'NEW' | 'EDIT';
@@ -23,6 +25,12 @@ export default function UserModal({
     if (_user) return _user;
     return DEFAULT_USER;
   });
+
+  const [books, setBooks] = useState<Book[]>();
+  useEffect(() => {
+    if (!_user) return;
+    getBookByUserId(user.id).then(setBooks);
+  }, [_user]);
 
   const handleSubmit = () => {
     onSubmit(user);
@@ -60,6 +68,24 @@ export default function UserModal({
             </div>
           </div>
         )}
+        <div className={styles.formItem}>
+          <label style={{ alignSelf: 'self-start' }}>대여중인 책</label>
+          <textarea
+            value={
+              books
+                ? books
+                    .map(
+                      (book) =>
+                        `[${dayjs(book.createdAt).format('YYYY.MM.DD')}] ${
+                          book.title
+                        }`
+                    )
+                    .join('\n')
+                : ''
+            }
+            disabled
+          />
+        </div>
         <div className={styles.formItem}>
           <label>아이디</label>
           <input value={user?.id === 0 ? '' : user.id} disabled />

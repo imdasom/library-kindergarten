@@ -1,11 +1,12 @@
 import styles from './BookModal.module.scss';
 import Modal from '@/components/Modal/Modal';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 import { Book, DEFAULT_BOOK } from '@/services/BookService';
 import html2canvas from 'html2canvas';
 import { downloadSvgToJpeg } from '../../../helper';
+import { getUserById, User } from '@/services/UserService';
 
 type Props = {
   actionType: 'NEW' | 'EDIT';
@@ -16,14 +17,20 @@ type Props = {
 
 export default function BookModal({
   actionType,
-  book: _user,
+  book: _book,
   onClose,
   onSubmit,
 }: Props) {
   const [book, setBook] = useState<Book>(() => {
-    if (_user) return _user;
+    if (_book) return _book;
     return DEFAULT_BOOK;
   });
+
+  const [user, setUser] = useState<User>();
+  useEffect(() => {
+    if (!_book || !_book.inUse) return;
+    getUserById(_book.userId).then(setUser);
+  }, [_book]);
 
   const handleSubmit = () => {
     if (book.barcode.length % 2 === 1) {
@@ -66,6 +73,13 @@ export default function BookModal({
             </div>
           </div>
         )}
+        <div className={styles.formItem}>
+          <label>대여상태</label>
+          <input
+            value={book.inUse ? `대여중 (${user?.name})` : '대여가능'}
+            disabled
+          />
+        </div>
         <div className={styles.formItem}>
           <label>아이디</label>
           <input value={book?.id === 0 ? '' : book.id} disabled />

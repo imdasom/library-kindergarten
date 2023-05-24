@@ -1,6 +1,6 @@
 import UseOrReturn from '@/components/UserOrReturn/UserOrReturn';
 import { Book, getBookByBarcode } from '@/services/BookService';
-import { inUseBook } from '@/services/UserBookService';
+import { returnBook } from '@/services/UserBookService';
 
 export default function UseOrReturnPage() {
   const handleBookBarcode = async (barcode: string): Promise<Book | null> => {
@@ -8,20 +8,22 @@ export default function UseOrReturnPage() {
     if (!book) {
       throw Error('존재하지 않는 바코드입니다');
     }
-    if (book.inUse) {
-      throw Error('이미 대출중인 책입니다');
+
+    if (!book.inUse) {
+      throw Error('대여한 적이 없는 책이에요. 먼저 대여해주세요.');
     }
+
     return book;
   };
 
   const handleSuccess = async (book, user): Promise<void> => {
     if (!book || !user) return;
-    await inUseBook({ bookId: book.id, userId: user.id });
+    await returnBook({ bookId: book.id, userId: user.id });
   };
 
   return (
     <UseOrReturn
-      actionType={'USE'}
+      actionType={'RETURN'}
       handleBookBarcode={handleBookBarcode}
       handleSuccess={handleSuccess}
     />

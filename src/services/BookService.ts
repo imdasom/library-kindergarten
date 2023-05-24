@@ -2,7 +2,7 @@
 import { supabase } from '../repositories';
 import dayjs from 'dayjs';
 
-type BookResponse = {
+export type BookResponse = {
   id: number;
   barcode: string;
   title: string;
@@ -45,18 +45,17 @@ const SCHEMA_NAME = 'BOOK';
 
 type GetBooksParam = { category?: string };
 
-export const getBooks = async ({ category }: GetBooksParam) => {
-  const mapResponse = (list: BookResponse[]): Book[] => {
-    return list.map((item) => {
-      return {
-        ...item,
-        createdAt: item['createdAt'] ? dayjs(item['createdAt']) : dayjs(),
-        updatedAt: item['updatedAt'] ? dayjs(item['updatedAt']) : dayjs(),
-      };
-    });
+export const mapResponse = (item: BookResponse): Book => {
+  return {
+    ...item,
+    createdAt: item['createdAt'] ? dayjs(item['createdAt']) : dayjs(),
+    updatedAt: item['updatedAt'] ? dayjs(item['updatedAt']) : dayjs(),
   };
+};
 
+export const getBooks = async ({ category }: GetBooksParam) => {
   let query = supabase.from(SCHEMA_NAME).select();
+
   if (!!category) {
     query = query.eq('category', category);
   }
@@ -68,7 +67,7 @@ export const getBooks = async ({ category }: GetBooksParam) => {
   if (!data) {
     return [];
   }
-  return mapResponse(data);
+  return data.map(mapResponse);
 };
 
 export const getBookByBarcode = async (
@@ -90,6 +89,22 @@ export const getBookByBarcode = async (
     createdAt: item.createdAt ? dayjs(item.createdAt) : dayjs(),
     updatedAt: item.updatedAt ? dayjs(item.updatedAt) : dayjs(),
   };
+};
+
+export const getBookByUserId = async (
+  userId: number
+): Promise<Book[] | null> => {
+  const { data } = await supabase
+    .from(SCHEMA_NAME)
+    .select()
+    .eq('userId', userId)
+    .returns<BookResponse[]>();
+
+  if (!data) {
+    return [];
+  }
+
+  return data.map(mapResponse);
 };
 
 export async function createBook(book: Book) {
@@ -119,12 +134,13 @@ export async function updateBook(book: Book) {
     .from(SCHEMA_NAME)
     .update(updateBook)
     .eq('id', book.id);
+  console.log(error);
 }
 
 export async function updateInUseBook(
   id: number,
   inUse: boolean,
-  userId?: number
+  userId: number | null
 ) {
   const updateBook = {
     inUse,
@@ -135,8 +151,10 @@ export async function updateInUseBook(
     .from(SCHEMA_NAME)
     .update(updateBook)
     .eq('id', id);
+  console.log(error);
 }
 
 export async function deleteBook(book: Book) {
   const { error } = await supabase.from(SCHEMA_NAME).delete().eq('id', book.id);
+  console.log(error);
 }
