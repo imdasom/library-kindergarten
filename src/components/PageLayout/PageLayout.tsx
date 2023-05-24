@@ -1,7 +1,11 @@
-import { FiMoreHorizontal } from 'react-icons/fi';
 import { PropsWithChildren } from 'react';
+import { IoMenuSharp } from 'react-icons/io5';
+import useModal from '@/components/Modal/useModal';
+import Modal from '@/components/Modal/Modal';
+import Menu from '@/components/Menu/Menu';
 
-export default function Layout({ children }: PropsWithChildren) {
+export default function PageLayout({ children }: PropsWithChildren) {
+  const sideMenu = useModal();
   return (
     <div style={Container}>
       <div style={Header}>
@@ -10,9 +14,14 @@ export default function Layout({ children }: PropsWithChildren) {
           <img src={'/logo.png'} width={100} height={100} />
           <div style={Title}>{'사랑의 도서관'}</div>
         </div>
-        <FiMoreHorizontal />
+        <IoMenuSharp size={30} onClick={() => sideMenu.onOpen()} />
       </div>
       <div style={Content}>{children}</div>
+      {sideMenu.open && (
+        <Modal onClose={sideMenu.onClose}>
+          <Menu />
+        </Modal>
+      )}
     </div>
   );
 }
@@ -28,7 +37,7 @@ const TitleContainer = {
 
 const Title = {
   fontFamily: 'kids',
-  fontSize: 80,
+  fontSize: 60,
   fontWeight: 'bold',
   color: 'black',
 };

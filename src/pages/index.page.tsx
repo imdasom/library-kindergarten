@@ -1,8 +1,8 @@
-import Layout from '../components/Layout';
+import PageLayout from '@/components/PageLayout/PageLayout';
 
 export default function Book() {
   return (
-    <Layout>
+    <PageLayout>
       <div style={ContentContainer}>
         <div style={Buttons}>
           <a href={'/use'} style={UseButton}>
@@ -13,7 +13,7 @@ export default function Book() {
           </a>
         </div>
       </div>
-    </Layout>
+    </PageLayout>
   );
 }
 

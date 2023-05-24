@@ -13,6 +13,7 @@ import {
   User,
   UserResponse,
 } from '@/services/UserService';
+import { update } from 'immutable';
 
 type HistoryResponse = {
   id: number;
@@ -35,8 +36,6 @@ export type History = {
 export type UpdateHistory = {
   id: number;
   returnAt: dayjs.Dayjs | null;
-  user?: User | null;
-  book?: Book | null;
 };
 
 export const DEFAULT_HISTORY: History = {
@@ -95,7 +94,11 @@ export async function createHistory(history: {
 }
 
 export async function updateHistory(updateHistory: UpdateHistory) {
-  await supabase.from(SCHEMA_NAME).update(updateHistory).eq('id', history.id);
+  const { error } = await supabase
+    .from(SCHEMA_NAME)
+    .update(updateHistory)
+    .eq('id', updateHistory.id);
+  console.log(error);
 }
 
 export async function getLatestHistory(
@@ -112,7 +115,7 @@ export async function getLatestHistory(
   if (error) throw Error(error.message);
   if (!data) throw Error('대출/반납 이력을 찾을 수 없어요');
   const target = data[0];
-  if (target.bookId != bookId || target.userId != userId)
+  if (target.bookId.id != bookId || target.userId.id != userId)
     throw Error('대출/반납 이력을 찾을 수 없어요');
   return target;
 }

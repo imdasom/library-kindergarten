@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Book } from '@/services/BookService';
 import { getUserByBarcode, User } from '@/services/UserService';
-import Layout from '@/components/Layout';
+import PageLayout from '@/components/PageLayout/PageLayout';
 
 let keybuffer = '';
 
@@ -76,7 +76,7 @@ export default function UseOrReturn({
   };
 
   return (
-    <Layout>
+    <PageLayout>
       <div style={Container}>
         <div style={ContentContainer}>
           {step === 1 && (
@@ -142,7 +142,7 @@ export default function UseOrReturn({
           </div>
         </div>
       </div>
-    </Layout>
+    </PageLayout>
   );
 }
 

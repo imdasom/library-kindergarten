@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
-import { History, getHistories } from '@/services/HistoryService';
+import {
+  History,
+  getHistories,
+  updateHistory,
+} from '@/services/HistoryService';
 import AdminPageLayout from '@/components/AdminPageLayout/AdminPageLayout';
 import styles from './index.module.scss';
+import { returnBook, shouldReturnBook } from '@/services/UserBookService';
 
 export default function HistoryListPage() {
   const [historyList, setHistoryList] = useState<History[]>();
@@ -16,6 +21,14 @@ export default function HistoryListPage() {
   useEffect(() => {
     handleGetHistoryList();
   }, []);
+
+  const handleClickReturn = (history: History) => {
+    shouldReturnBook({
+      historyId: history.id,
+      bookId: history.book.id,
+      userId: history.user.id,
+    });
+  };
 
   return (
     <AdminPageLayout>
@@ -56,7 +69,18 @@ export default function HistoryListPage() {
                 <div>{history.book.title}</div>
                 <div>{history.createdAt.format('YYYY-MM-DD HH:mm')}</div>
                 <div>{history.dueAt.format('YYYY-MM-DD HH:mm')}</div>
-                <div>{history.returnAt?.format('YYYY-MM-DD HH:mm')}</div>
+                <div>
+                  {history.returnAt ? (
+                    history.returnAt?.format('YYYY-MM-DD HH:mm')
+                  ) : (
+                    <div
+                      className={styles.returnButton}
+                      onClick={() => handleClickReturn(history)}
+                    >
+                      반납처리하기
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}

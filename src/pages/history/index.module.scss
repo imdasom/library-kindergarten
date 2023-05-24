@@ -63,11 +63,19 @@
   padding: 4px;
 }
 
+.returnButton {
+  //width: fit-content;
+  //background: #f7f679;
+  //padding: 4px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .itemContainer {
   display: grid;
   grid-auto-flow: column;
   width: 100%;
-  grid-template-columns: 70px 100px 150px auto 100px 100px 100px;
+  grid-template-columns: 70px 100px 100px auto 100px 100px 100px;
   font-size: 0.6em;
   align-items: center;
 

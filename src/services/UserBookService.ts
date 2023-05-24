@@ -51,3 +51,28 @@ export async function returnBook({
       console.log(`대출 완료`);
     });
 }
+
+export async function shouldReturnBook({
+  historyId,
+  bookId,
+  userId,
+}: {
+  historyId: number;
+  bookId: number;
+  userId: number;
+}) {
+  updateInUseBook(bookId, false, userId)
+    .catch((error) => alert(error.message))
+    .then((history) => {
+      console.log('success getLatestHistory', history);
+      return updateHistory({
+        id: historyId,
+        returnAt: dayjs(),
+      });
+    })
+    .catch((error) => alert(error.message))
+    .then(() => {
+      console.log(`반납처리완료`);
+      window.location.reload();
+    });
+}
