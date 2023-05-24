@@ -29,7 +29,7 @@ export default function UseOrReturn({
             if (!book) return;
             setBook(book);
             setStep((prev) => prev + 1);
-          } catch (error) {
+          } catch (error: any) {
             alert(error.message);
             keybuffer = '';
           }

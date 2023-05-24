@@ -1,4 +1,3 @@
-//@ts-ignore
 import { supabase } from '../repositories';
 import dayjs from 'dayjs';
 import {
@@ -13,7 +12,6 @@ import {
   User,
   UserResponse,
 } from '@/services/UserService';
-import { update } from 'immutable';
 
 type HistoryResponse = {
   id: number;
@@ -49,18 +47,16 @@ export const DEFAULT_HISTORY: History = {
 
 const SCHEMA_NAME = 'HISTORY';
 
-const mapResponse = (list: HistoryResponse[]): History[] => {
-  return list.map((item) => {
-    const { userId, bookId, ..._item } = item;
-    return {
-      ..._item,
-      user: mapUserResponse(userId),
-      book: mapBookResponse(bookId),
-      createdAt: item['createdAt'] ? dayjs(item['createdAt']) : dayjs(),
-      returnAt: item['returnAt'] ? dayjs(item['returnAt']) : null,
-      dueAt: item['dueAt'] ? dayjs(item['dueAt']) : dayjs(),
-    };
-  });
+const mapResponse = (item: HistoryResponse): History => {
+  const { userId, bookId, ..._item } = item;
+  return {
+    ..._item,
+    user: mapUserResponse(userId),
+    book: mapBookResponse(bookId),
+    createdAt: item['createdAt'] ? dayjs(item['createdAt']) : dayjs(),
+    returnAt: item['returnAt'] ? dayjs(item['returnAt']) : null,
+    dueAt: item['dueAt'] ? dayjs(item['dueAt']) : dayjs(),
+  };
 };
 
 export const getHistories = async () => {
@@ -73,7 +69,7 @@ export const getHistories = async () => {
   if (!data) {
     return [];
   }
-  return mapResponse(data);
+  return data.map(mapResponse);
 };
 
 export async function createHistory(history: {
@@ -88,7 +84,7 @@ export async function createHistory(history: {
 
   try {
     await supabase.from(SCHEMA_NAME).insert(newHistory).throwOnError();
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 }
@@ -117,5 +113,5 @@ export async function getLatestHistory(
   const target = data[0];
   if (target.bookId.id != bookId || target.userId.id != userId)
     throw Error('대출/반납 이력을 찾을 수 없어요');
-  return target;
+  return mapResponse(target);
 }

@@ -5,7 +5,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 import { downloadSvgToJpeg } from '../../../helper';
-import { Book, getBookByUserId } from '@/services/BookService';
+import { Book, DEFAULT_BOOK, getBookByUserId } from '@/services/BookService';
 import dayjs from 'dayjs';
 
 type Props = {

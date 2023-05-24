@@ -4,7 +4,6 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import Barcode from 'react-barcode';
 import Button from '@/components/Button/Button';
 import { Book, DEFAULT_BOOK } from '@/services/BookService';
-import html2canvas from 'html2canvas';
 import { downloadSvgToJpeg } from '../../../helper';
 import { getUserById, User } from '@/services/UserService';
 
@@ -26,10 +25,13 @@ export default function BookModal({
     return DEFAULT_BOOK;
   });
 
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>();
   useEffect(() => {
-    if (!_book || !_book.inUse) return;
-    getUserById(_book.userId).then(setUser);
+    if (!_book || !_book.inUse || !_book.userId) {
+      console.log('[BookModal] 유효하지 않은 _book', _book);
+      return;
+    }
+    getUserById(_book.userId).then((user) => setUser(user));
   }, [_book]);
 
   const handleSubmit = () => {
@@ -105,6 +107,14 @@ export default function BookModal({
           <input
             value={book?.painter}
             name={'painter'}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={styles.formItem}>
+          <label>출판사</label>
+          <input
+            value={book?.publisher}
+            name={'publisher'}
             onChange={handleChange}
           />
         </div>

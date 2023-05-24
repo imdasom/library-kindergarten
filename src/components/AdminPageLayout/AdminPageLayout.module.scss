@@ -29,7 +29,7 @@
   font-size: 20px;
   font-weight: bold;
   color: black;
-};
+}
 
 .content {
   height: calc(100vh - 200px);
@@ -38,4 +38,8 @@
   align-items: center;
   padding: 0px 40px;
   flex: 1;
-};
+}
+
+.menuButton {
+  cursor: pointer;
+}

@@ -46,6 +46,7 @@ export const getUsers = async () => {
   const { data } = await supabase
     .from(SCHEMA_NAME)
     .select()
+    .eq('deleted', false)
     .order('id', { ascending: false })
     .returns<UserResponse[]>();
 
@@ -56,7 +57,7 @@ export const getUsers = async () => {
   return data.map(mapResponse);
 };
 
-export const getUserById = async (id: string): Promise<User | null> => {
+export const getUserById = async (id: number): Promise<User | null> => {
   const { data: item } = await supabase
     .from(SCHEMA_NAME)
     .select()
@@ -113,7 +114,7 @@ export async function createUser(user: User) {
 
   try {
     await supabase.from(SCHEMA_NAME).insert(newUser).throwOnError();
-  } catch (error) {
+  } catch (error: any) {
     //@ts-ignore
     if (error.code === '23505') {
       throw Error('중복된 바코드입니다');
@@ -138,5 +139,13 @@ export async function updateUser(user: User) {
 }
 
 export async function deleteUser(user: User) {
-  const { error } = await supabase.from(SCHEMA_NAME).delete().eq('id', user.id);
+  const updateUser = {
+    deleted: true,
+    updated_at: dayjs().toDate(),
+  };
+  const { error } = await supabase
+    .from(SCHEMA_NAME)
+    .update(updateUser)
+    .eq('id', user.id);
+  console.log(error);
 }

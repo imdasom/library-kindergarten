@@ -8,6 +8,7 @@ export type BookResponse = {
   title: string;
   writer: string;
   painter: string;
+  publisher: string;
   category: string;
   userId?: number;
   inUse: boolean;
@@ -21,6 +22,7 @@ export type Book = {
   title: string;
   writer: string;
   painter: string;
+  publisher: string;
   category: string;
   userId?: number;
   inUse: boolean;
@@ -34,8 +36,9 @@ export const DEFAULT_BOOK: Book = {
   title: '',
   writer: '',
   painter: '',
+  publisher: '',
   category: '',
-  inUse: true,
+  inUse: false,
   userId: 0,
   createdAt: dayjs(),
   updatedAt: dayjs(),
@@ -61,6 +64,7 @@ export const getBooks = async ({ category }: GetBooksParam) => {
   }
 
   const { data } = await query
+    .eq('deleted', false)
     .order('id', { ascending: false })
     .returns<BookResponse[]>();
 
@@ -91,9 +95,7 @@ export const getBookByBarcode = async (
   };
 };
 
-export const getBookByUserId = async (
-  userId: number
-): Promise<Book[] | null> => {
+export const getBookByUserId = async (userId: number): Promise<Book[]> => {
   const { data } = await supabase
     .from(SCHEMA_NAME)
     .select()
@@ -116,7 +118,7 @@ export async function createBook(book: Book) {
   };
   try {
     await supabase.from(SCHEMA_NAME).insert(newBook).throwOnError();
-  } catch (error) {
+  } catch (error: any) {
     //@ts-ignore
     if (error.code === '23505') {
       throw Error('중복된 바코드입니다');
@@ -155,6 +157,13 @@ export async function updateInUseBook(
 }
 
 export async function deleteBook(book: Book) {
-  const { error } = await supabase.from(SCHEMA_NAME).delete().eq('id', book.id);
+  const updateBook = {
+    deleted: true,
+    updatedAt: book.updatedAt.toDate(),
+  };
+  const { error } = await supabase
+    .from(SCHEMA_NAME)
+    .update(updateBook)
+    .eq('id', book.id);
   console.log(error);
 }

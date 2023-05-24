@@ -1,6 +1,7 @@
 import UseOrReturn from '@/components/UserOrReturn/UserOrReturn';
 import { Book, getBookByBarcode } from '@/services/BookService';
 import { returnBook } from '@/services/UserBookService';
+import { User } from '@/services/UserService';
 
 export default function UseOrReturnPage() {
   const handleBookBarcode = async (barcode: string): Promise<Book | null> => {
@@ -16,7 +17,7 @@ export default function UseOrReturnPage() {
     return book;
   };
 
-  const handleSuccess = async (book, user): Promise<void> => {
+  const handleSuccess = async (book: Book, user: User): Promise<void> => {
     if (!book || !user) return;
     await returnBook({ bookId: book.id, userId: user.id });
   };

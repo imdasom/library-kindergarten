@@ -15,7 +15,11 @@ export default function AdminPageLayout({ children }: PropsWithChildren) {
           <img src={'/logo.png'} width={50} height={50} />
           <div className={styles.title}>{'사랑의 도서관'}</div>
         </div>
-        <IoMenuSharp size={30} onClick={() => sideMenu.onOpen()} />
+        <IoMenuSharp
+          size={30}
+          onClick={() => sideMenu.onOpen()}
+          className={styles.menuButton}
+        />
       </div>
       <div className={styles.content}>{children}</div>
       {sideMenu.open && (

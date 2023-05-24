@@ -52,7 +52,11 @@ export default function HistoryListPage() {
           </div>
           {historyList?.map((history, i) => {
             return (
-              <div key={i} className={styles.itemContainer} alt={history.id}>
+              <div
+                key={i}
+                className={styles.itemContainer}
+                title={String(history.id)}
+              >
                 <div>{historyList?.length - i}</div>
                 <div>
                   <div

@@ -14,7 +14,11 @@ export default function PageLayout({ children }: PropsWithChildren) {
           <img src={'/logo.png'} width={100} height={100} />
           <div style={Title}>{'사랑의 도서관'}</div>
         </div>
-        <IoMenuSharp size={30} onClick={() => sideMenu.onOpen()} />
+        <IoMenuSharp
+          size={30}
+          onClick={() => sideMenu.onOpen()}
+          style={{ cursor: 'pointer' }}
+        />
       </div>
       <div style={Content}>{children}</div>
       {sideMenu.open && (
