@@ -20,6 +20,9 @@ export default function UseOrReturnPage() {
   const handleSuccess = async (book: Book, user: User): Promise<void> => {
     if (!book || !user) return;
     await returnBook({ bookId: book.id, userId: user.id });
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 500);
   };
 
   return (
